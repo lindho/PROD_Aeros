@@ -2,20 +2,28 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent (typeof (Rigidbody))]
+
 public class PlayerController : MonoBehaviour {
-	Vector3 velocity;
-	Rigidbody myBody;
+	public float moveSpeed = 5;
 
 	void Start () {
-		myBody = GetComponent<Rigidbody>();
 	}
 	
-	public void Move(Vector3 _velocity){
-		velocity = _velocity;
-	}
+//	public void Move(Vector3 _velocity){
+//		velocity = _velocity;
+//	}
 
 	public void FixedUpdate(){
-		myBody.MovePosition (myBody.position + velocity * Time.fixedDeltaTime);
+		if (Input.GetAxisRaw ("Horizontal") > 0.5f || Input.GetAxisRaw ("Horizontal") < -0.5f) {
+		
+			transform.Translate = (new Vector3 (Input.GetAxisRaw ("Horizontal") * moveSpeed * Time.fixedDeltaTime, 0f, 0f));
+		
+		}
+
+		if (Input.GetAxisRaw ("Vertical") > 0.5f || Input.GetAxisRaw ("Vertical") < -0.5f) {
+
+			transform.Translate = (new Vector3 (0f, Input.GetAxisRaw ("Vertical") * moveSpeed * Time.fixedDeltaTime, 0f));
+
+		}
 	}
 }

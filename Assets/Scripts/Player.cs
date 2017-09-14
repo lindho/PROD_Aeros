@@ -5,8 +5,12 @@ using UnityEngine;
 [RequireComponent(typeof (PlayerController))]
 public class Player : MonoBehaviour {
 
+<<<<<<< HEAD
 	const float maxSpeed = 5f;
 
+=======
+	float maxSpeed = 5f;
+>>>>>>> e4cd1903ddae765a9526629e7c45cb77be6a17d4
 	public float moveSpeedGround = 5f;
 	public float moveSpeedWater = 3f;
 	Vector2 velocity;
@@ -20,12 +24,16 @@ public class Player : MonoBehaviour {
 
 	PlayerController controller;
 
+	bool isDemon;
+	string demonBind = "r";
+
 //	Collider collider;
 //  Vector2 moveInput;
 
 
 	void Start () {
 		controller = GetComponent <PlayerController>();
+		isDemon = false;
 	}
 
 	public void Update(){
@@ -39,7 +47,10 @@ public class Player : MonoBehaviour {
 		}
 
 		float pythagoras = (Mathf.Pow(velocity.x, 2) + (Mathf.Pow(velocity.y, 2)));
+<<<<<<< HEAD
 
+=======
+>>>>>>> e4cd1903ddae765a9526629e7c45cb77be6a17d4
 		if (pythagoras > (Mathf.Pow (maxSpeed, 2))) {
 			float magnitude = Mathf.Sqrt (pythagoras);
 			float multiplier = maxSpeed / magnitude;
@@ -55,5 +66,20 @@ public class Player : MonoBehaviour {
 		velocity.y = Mathf.SmoothDamp (velocity.y, targetVelocityY, ref velocityYSmoothing, accelerationTimeGround);
 
 		controller.Move (velocity * Time.deltaTime);
+
+		if(Input.GetKeyDown(demonBind)){
+			isDemon = !isDemon;
+			DemonForm ();
+		}
+	}
+
+	public void DemonForm(){
+		if (isDemon) {
+			moveSpeedGround = 7f;
+			maxSpeed = 7f;
+		} else {
+			moveSpeedGround = 5f;
+			maxSpeed = 5f;
+		}
 	}
 }

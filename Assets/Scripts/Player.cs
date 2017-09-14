@@ -13,8 +13,8 @@ public class Player : MonoBehaviour {
 	Vector2 velocity;
 
 	float accelerationTimeGround = .05f;
-	float accelerationTimeWater = .2f;
-	float accelerationTimeMud  = .3f;
+//	float accelerationTimeWater = .2f;
+//	float accelerationTimeMud  = .3f;
 
 	float velocityXSmoothing;
 	float velocityYSmoothing;

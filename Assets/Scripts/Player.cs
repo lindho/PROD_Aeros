@@ -70,10 +70,8 @@ public class Player : MonoBehaviour {
 	public void DemonForm(){
 		if (isDemon) {
 			moveSpeedGround = 7f;
-			maxSpeed = 7f;
 		} else {
 			moveSpeedGround = 5f;
-			maxSpeed = 5f;
 		}
 	}
 }

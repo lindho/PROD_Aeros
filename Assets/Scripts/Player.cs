@@ -5,12 +5,9 @@ using UnityEngine;
 [RequireComponent(typeof (PlayerController))]
 public class Player : MonoBehaviour {
 
-<<<<<<< HEAD
+
 	const float maxSpeed = 5f;
 
-=======
-	float maxSpeed = 5f;
->>>>>>> e4cd1903ddae765a9526629e7c45cb77be6a17d4
 	public float moveSpeedGround = 5f;
 	public float moveSpeedWater = 3f;
 	Vector2 velocity;
@@ -47,10 +44,7 @@ public class Player : MonoBehaviour {
 		}
 
 		float pythagoras = (Mathf.Pow(velocity.x, 2) + (Mathf.Pow(velocity.y, 2)));
-<<<<<<< HEAD
 
-=======
->>>>>>> e4cd1903ddae765a9526629e7c45cb77be6a17d4
 		if (pythagoras > (Mathf.Pow (maxSpeed, 2))) {
 			float magnitude = Mathf.Sqrt (pythagoras);
 			float multiplier = maxSpeed / magnitude;

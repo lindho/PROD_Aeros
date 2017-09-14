@@ -4,7 +4,9 @@ using UnityEngine;
 
 [RequireComponent(typeof (PlayerController))]
 public class Player : MonoBehaviour {
-	
+
+	const float maxSpeed = 5f;
+	float pythagoras = (Mathf.Pow(velocity.x, 2) + (Mathf.Pow(velocity.y, 2)));
 	public float moveSpeedGround = 5f;
 	public float moveSpeedWater = 3f;
 	Vector2 velocity;
@@ -34,6 +36,13 @@ public class Player : MonoBehaviour {
 
 		if (controller.collisions.left || controller.collisions.right) {
 			velocity.x = 0;
+		}
+
+		if (pythagoras > (Mathf.Pow (maxSpeed, 2))) {
+			float magnitude = Mathf.Sqrt (pythagoras);
+			float multiplier = maxSpeed / magnitude;
+			velocity.x *= multiplier;
+			velocity.y *= multiplier;
 		}
 
 		Vector2 input = new Vector2 (Input.GetAxisRaw ("Horizontal"), Input.GetAxisRaw ("Vertical"));

@@ -8,6 +8,10 @@ public class Player : MonoBehaviour {
 
 	const float maxSpeed = 5f;
 
+	public LayerMask groundLayer;
+	float rotationRayLength = 50f;
+	Camera mainCamera;
+
 	public float moveSpeedGround = 5f;
 	public float moveSpeedWater = 3f;
 	Vector2 velocity;
@@ -30,10 +34,13 @@ public class Player : MonoBehaviour {
 
 	void Start () {
 		controller = GetComponent <PlayerController>();
+		mainCamera = Camera.main;
 		isDemon = false;
 	}
 
 	public void Update(){
+
+//		Rotate();
 
 // 		if (controller.collisions.below || controller.collisions.above) {
 //			velocity.y = 0;
@@ -74,4 +81,15 @@ public class Player : MonoBehaviour {
 			moveSpeedGround = 5f;
 		}
 	}
+
+//	void RotatePlayer(){
+//		Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition); 
+//		RaycastHit hit;
+//
+//		if (Physics.Raycast (ray, out hit)) { 
+//			Vector3 hitPoint = hit.point;
+//			Debug.DrawLine (ray.origin, hitPoint, Color.red);
+//			controller.LookAt (hitPoint);
+//		}
+//	}
 }

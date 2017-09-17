@@ -18,7 +18,7 @@ public class PlayerController : MonoBehaviour {
 	public int horizontalRayCount = 4;
 	public int verticalRayCount = 4;
 
- 	public BoxCollider2D collider;
+ 	BoxCollider2D collider;
 	RayCastOrigins raycastOrigins;
 	public CollisionInfo collisions;
 
@@ -42,6 +42,10 @@ public class PlayerController : MonoBehaviour {
 
 		transform.Translate (velocity);
 	}
+
+//	public void LookAt (Vector3 lookPoint){
+//		
+//	}
 
 	void HorizontalCollisions(ref Vector3 velocity){
 		float directionX = Mathf.Sign (velocity.x);

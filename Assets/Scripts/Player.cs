@@ -35,13 +35,13 @@ public class Player : MonoBehaviour {
 
 	public void Update(){
 
-		if (controller.collisions.below || controller.collisions.above) {
-			velocity.y = 0;
-		}
-
-		if (controller.collisions.left || controller.collisions.right) {
-			velocity.x = 0;
-		}
+// 		if (controller.collisions.below || controller.collisions.above) {
+//			velocity.y = 0;
+//		}
+//
+//		if (controller.collisions.left || controller.collisions.right) {
+//			velocity.x = 0;
+//		}
 
 		float pythagoras = (Mathf.Pow(velocity.x, 2) + (Mathf.Pow(velocity.y, 2)));
 
@@ -59,7 +59,7 @@ public class Player : MonoBehaviour {
 		float targetVelocityY = input.y * moveSpeedGround;
 		velocity.y = Mathf.SmoothDamp (velocity.y, targetVelocityY, ref velocityYSmoothing, accelerationTimeGround);
 
-		controller.Move (velocity * Time.deltaTime);
+		controller.Move (velocity * Time.deltaTime, input);
 
 		if(Input.GetKeyDown(demonBind)){
 			isDemon = !isDemon;

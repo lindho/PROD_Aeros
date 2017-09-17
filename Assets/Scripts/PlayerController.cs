@@ -5,6 +5,9 @@ using UnityEngine;
 [RequireComponent(typeof (BoxCollider2D))]
 public class PlayerController : MonoBehaviour {
 
+	[HideInInspector]
+	public Vector2 playerInput;
+
 	public LayerMask collisionMask;
 
 	const float skinWidth = .015f;
@@ -15,7 +18,7 @@ public class PlayerController : MonoBehaviour {
 	public int horizontalRayCount = 4;
 	public int verticalRayCount = 4;
 
-	BoxCollider2D collider;
+ 	public BoxCollider2D collider;
 	RayCastOrigins raycastOrigins;
 	public CollisionInfo collisions;
 
@@ -24,9 +27,10 @@ public class PlayerController : MonoBehaviour {
 		CalculateRaySpacing ();
 	}
 
-	public void Move(Vector3 velocity){
+	public void Move(Vector3 velocity, Vector2 input){
 		UpdateRayCastOrigins ();
 		collisions.Reset ();
+		playerInput = input;
 
 		if (velocity.x != 0) {
 			HorizontalCollisions (ref velocity);
@@ -74,7 +78,7 @@ public class PlayerController : MonoBehaviour {
 				rayLength = hit.distance;
 
 				collisions.below = directionY == -1;
-				collisions.right = directionY == 1;
+				collisions.above = directionY == 1;
 			}
 		}
 	}

@@ -4,7 +4,7 @@
 //
 //public class CameraFollow : MonoBehaviour {
 //
-//  public Player target;
+//    public PlayerController target;
 //	public float verticalOffset;
 //	public float lookAheadDstX;
 //	public float lookSmoothTimeX;
@@ -32,7 +32,7 @@
 //
 //		if (focusArea.velocity.x != 0) {
 //			lookAheadDirX = Mathf.Sign (focusArea.velocity.x);
-//			if (Mathf.Sign(target.moveInput.x) == Mathf.Sign(focusArea.velocity.x) && target.moveInput.x != 0) {
+//			if (Mathf.Sign(target.playerInput.x) == Mathf.Sign(focusArea.velocity.x) && target.playerInput.x != 0) {
 //				lookAheadStopped = false;
 //				targetLookAheadX = lookAheadDirX * lookAheadDstX;
 //			}

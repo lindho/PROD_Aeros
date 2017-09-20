@@ -36,7 +36,7 @@ public class PlayerController : MonoBehaviour {
 			HorizontalCollisions (ref velocity);
 		}
 
-		if (velocity.z != 0) {
+		if (velocity.y != 0) {
 			VerticalCollisions (ref velocity);
 		}
 
@@ -68,8 +68,8 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void VerticalCollisions(ref Vector3 velocity){
-		float directionY = Mathf.Sign (velocity.z);
-		float rayLength = Mathf.Abs (velocity.z) + skinWidth;
+		float directionY = Mathf.Sign (velocity.y);
+		float rayLength = Mathf.Abs (velocity.y) + skinWidth;
 		for (int i = 0; i < verticalRayCount; i++) {
 			Vector2 rayOrigin = (directionY == -1) ? raycastOrigins.bottomLeft : raycastOrigins.topLeft;
 			rayOrigin += Vector2.right * (verticalRaySpacing * i + velocity.x);
@@ -78,7 +78,7 @@ public class PlayerController : MonoBehaviour {
 			Debug.DrawRay (rayOrigin, Vector2.up * directionY * rayLength, Color.red);
 
 			if (hit) {
-				velocity.z = (hit.distance - skinWidth) * directionY;
+				velocity.y = (hit.distance - skinWidth) * directionY;
 				rayLength = hit.distance;
 
 				collisions.below = directionY == -1;
@@ -91,10 +91,10 @@ public class PlayerController : MonoBehaviour {
 		Bounds bounds = collider.bounds;
 		bounds.Expand (skinWidth * -2);
 
-		raycastOrigins.bottomLeft = new Vector2 (bounds.min.x, bounds.min.z);
-		raycastOrigins.bottomRight = new Vector2 (bounds.max.x, bounds.min.z);
-		raycastOrigins.topLeft = new Vector2 (bounds.min.x, bounds.max.z);
-		raycastOrigins.topRight = new Vector2 (bounds.max.x, bounds.max.z);
+		raycastOrigins.bottomLeft = new Vector2 (bounds.min.x, bounds.min.y);
+		raycastOrigins.bottomRight = new Vector2 (bounds.max.x, bounds.min.y);
+		raycastOrigins.topLeft = new Vector2 (bounds.min.x, bounds.max.y);
+		raycastOrigins.topRight = new Vector2 (bounds.max.x, bounds.max.y);
 
 	}
 
@@ -105,7 +105,7 @@ public class PlayerController : MonoBehaviour {
 		horizontalRayCount = Mathf.Clamp (horizontalRayCount, 2, int.MaxValue);
 		verticalRayCount = Mathf.Clamp (verticalRayCount, 2, int.MaxValue);
 
-		horizontalRaySpacing = bounds.size.z / (horizontalRayCount - 1);
+		horizontalRaySpacing = bounds.size.y / (horizontalRayCount - 1);
 		verticalRaySpacing = bounds.size.x / (verticalRayCount - 1);
 
 	}

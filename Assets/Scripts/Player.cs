@@ -6,7 +6,7 @@ using UnityEngine;
 public class Player : MonoBehaviour {
 
 
-	const float maxSpeed = 4f;
+	const float maxSpeed = 5f;
 
 	public LayerMask groundLayer;
 	float rotationRayLength = 50f;
@@ -81,18 +81,6 @@ public class Player : MonoBehaviour {
 			moveSpeedGround = 5f;
 		}
 	}
-
-//	public void getAccelerationTime(){
-//		RaycastHit2D hit;
-//		if (Physics.Raycast (transform.position, Vector2.down, hit)) {
-//			string surfacetag = hit.collider.gameObject.tag;
-//			if (surfacetag == "Grass") {
-//				return accelerationTimeGround;
-//			}
-//		}
-//
-//		return;
-//	}
 
 //	void RotatePlayer(){
 //		Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition); 

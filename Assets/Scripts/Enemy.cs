@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent (typeof (PlayerController))]
 public class Enemy : MonoBehaviour {
 
 	float attackDistanceThreshold;
@@ -10,8 +11,9 @@ public class Enemy : MonoBehaviour {
 	float nextAttackTime;
 
 	bool isAggro;
+	bool isChasing;
 	public Transform target;
-	float moveSpeed = 3f;
+	float moveSpeed = 5f;
 	public GameObject startPosition;
 
 	void Start () {
@@ -20,6 +22,7 @@ public class Enemy : MonoBehaviour {
 
 	void Update () {
 		Aggro ();
+		Chase ();
 
 		if (Time.time > nextAttackTime) {
 			float sqrDstToTarget = (target.position - transform.position).sqrMagnitude;
@@ -42,18 +45,28 @@ public class Enemy : MonoBehaviour {
 	}
 
 	void Aggro (){
-		isAggro = true;
-		float attack = moveSpeed * Time.deltaTime;
-		if ((transform.position - target.transform.position).magnitude < 10f && isAggro) {
-			transform.position = Vector3.MoveTowards (transform.position, target.position/* - offset*/, attack);
-		} else if ((transform.position - target.transform.position).magnitude > 10f) {
-			ReturnToStartPoint ();
+		if ((startPosition.transform.position - target.transform.position).magnitude < 8f) {
+			isAggro = true;
+			//			transform.position = Vector3.MoveTowards (transform.position, target.position/* - offset*/, attack);
+		} else if ((transform.position - startPosition.transform.position).magnitude > 15f) {
+			isAggro = false;
+			//ReturnToStartPoint ();
 		}
 	}
 
-	void ReturnToStartPoint(){
-		isAggro = false;
-		float retreat = (moveSpeed*1.5f) * Time.deltaTime;
-		transform.position = Vector3.MoveTowards (transform.position, startPosition.transform.position, retreat);
+	//	void ReturnToStartPoint(){
+	//		isAggro = false;
+	//		float retreat = (moveSpeed*1.5f) * Time.deltaTime;
+	//		transform.position = Vector3.MoveTowards (transform.position, startPosition.transform.position, retreat);
+	//	}
+
+	void Chase(){
+		float attack = moveSpeed * Time.deltaTime;
+		float retreat = (moveSpeed * 1.5f) * Time.deltaTime;
+		if (isAggro) { 
+			transform.position = Vector3.MoveTowards (transform.position, target.position/* - offset*/, attack);		
+		} else if(!isAggro){
+			transform.position = Vector3.MoveTowards (transform.position, startPosition.transform.position, retreat);
+		}
 	}
 }

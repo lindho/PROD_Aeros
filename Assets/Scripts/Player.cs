@@ -59,7 +59,7 @@ public class Player : MonoBehaviour {
 			velocity.y *= multiplier;
 		}
 
-		Vector2 input = new Vector2 (Input.GetAxisRaw ("Horizontal"), Input.GetAxisRaw ("Vertical"));
+		Vector2 input = new Vector2 (Input.GetAxisRaw ("Horizontal"), Input.GetAxisRaw ("Vertical")).normalized;
 
 		float targetVelocityX = input.x * moveSpeedGround;
 		velocity.x = Mathf.SmoothDamp (velocity.x, targetVelocityX, ref velocityXSmoothing, accelerationTimeGround); //här kan man updatera accelerationstiden baserat på underlag, water och mud variabler finns
@@ -76,7 +76,7 @@ public class Player : MonoBehaviour {
 
 	public void DemonForm(){
 		if (isDemon) {
-			moveSpeedGround = 7f;
+			moveSpeedGround += 7f;
 		} else {
 			moveSpeedGround = 5f;
 		}

@@ -2,32 +2,28 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof (BoxCollider2D))]
-public class PlayerController : MonoBehaviour {
+public class PlayerController : RaycastController {
+
+	public CollisionInfo collisions;
 
 	[HideInInspector]
 	public Vector2 playerInput;
 
-	public LayerMask collisionMask;
+	//Animation
+	private Animator anim;
+	private bool playerIsMoving;
+	private Vector2 lastMove;
 
-	const float skinWidth = .015f;
-
-	float horizontalRaySpacing;
-	float verticalRaySpacing;
-
-	public int horizontalRayCount = 4;
-	public int verticalRayCount = 4;
-
- 	BoxCollider2D collider;
-	RayCastOrigins raycastOrigins;
-	public CollisionInfo collisions;
-
-	void Start(){
-		collider = GetComponent<BoxCollider2D> ();
-		CalculateRaySpacing ();
+	public override void Start(){
+		base.Start ();
+		anim = GetComponent<Animator> ();
 	}
 
-	public void Move(Vector3 velocity, Vector2 input){
+	public void Move(Vector2 velocity){
+		Move (velocity, Vector2.zero);
+	}
+
+	public void Move(Vector2 velocity, Vector2 input){
 		UpdateRayCastOrigins ();
 		collisions.Reset ();
 		playerInput = input;
@@ -40,16 +36,36 @@ public class PlayerController : MonoBehaviour {
 			VerticalCollisions (ref velocity);
 		}
 
+//		playerInput = input;
+//		playerIsMoving = false;
+//
+//		if (velocity.y < -5 || velocity.x > 5) {
+//			HorizontalCollisions (ref velocity);
+//			playerIsMoving = true;
+//			lastMove = new Vector2 (velocity.y , 0f);
+//			anim.SetFloat ("FaceX", lastMove.x);
+//		}
+//
+//		if (velocity.y < -5 || velocity.y > 5) {
+//			VerticalCollisions (ref velocity);
+//			playerIsMoving = true;
+//			lastMove = new Vector2 (0f, velocity.x);
+//			anim.SetFloat ("FaceY", lastMove.y);
+//		}
+//
+//		anim.SetFloat ("MoveY", Input.GetAxisRaw ("Vertical"));
+//		anim.SetFloat ("MoveX", Input.GetAxisRaw ("Horizontal"));
+//		anim.SetBool ("PlayerIsMoving", playerIsMoving);
+//		anim.SetFloat ("FaceX", lastMove.x);
+//		anim.SetFloat ("FaceY", lastMove.y);
+
 		transform.Translate (velocity);
 	}
 
-//	public void LookAt (Vector3 lookPoint){
-//		
-//	}
-
-	void HorizontalCollisions(ref Vector3 velocity){
+	void HorizontalCollisions(ref Vector2 velocity){
 		float directionX = Mathf.Sign (velocity.x);
 		float rayLength = Mathf.Abs (velocity.x) + skinWidth;
+
 		for (int i = 0; i < horizontalRayCount; i++) {
 			Vector2 rayOrigin = (directionX == -1) ? raycastOrigins.bottomLeft : raycastOrigins.bottomRight;
 			rayOrigin += Vector2.up * (horizontalRaySpacing * i);
@@ -57,9 +73,11 @@ public class PlayerController : MonoBehaviour {
 
 			Debug.DrawRay (rayOrigin, Vector2.right * directionX * rayLength, Color.red);
 
+
 			if (hit) {
 				velocity.x = (hit.distance - skinWidth) * directionX;
 				rayLength = hit.distance;
+				print(velocity.x);
 
 				collisions.left = directionX == -1;
 				collisions.right = directionX == 1;
@@ -67,9 +85,10 @@ public class PlayerController : MonoBehaviour {
 		}
 	}
 
-	void VerticalCollisions(ref Vector3 velocity){
+	void VerticalCollisions(ref Vector2 velocity){
 		float directionY = Mathf.Sign (velocity.y);
 		float rayLength = Mathf.Abs (velocity.y) + skinWidth;
+
 		for (int i = 0; i < verticalRayCount; i++) {
 			Vector2 rayOrigin = (directionY == -1) ? raycastOrigins.bottomLeft : raycastOrigins.topLeft;
 			rayOrigin += Vector2.right * (verticalRaySpacing * i + velocity.x);
@@ -85,34 +104,6 @@ public class PlayerController : MonoBehaviour {
 				collisions.above = directionY == 1;
 			}
 		}
-	}
-
-	void UpdateRayCastOrigins(){
-		Bounds bounds = collider.bounds;
-		bounds.Expand (skinWidth * -2);
-
-		raycastOrigins.bottomLeft = new Vector2 (bounds.min.x, bounds.min.y);
-		raycastOrigins.bottomRight = new Vector2 (bounds.max.x, bounds.min.y);
-		raycastOrigins.topLeft = new Vector2 (bounds.min.x, bounds.max.y);
-		raycastOrigins.topRight = new Vector2 (bounds.max.x, bounds.max.y);
-
-	}
-
-	void CalculateRaySpacing(){
-		Bounds bounds = collider.bounds;
-		bounds.Expand (skinWidth * -2);
-
-		horizontalRayCount = Mathf.Clamp (horizontalRayCount, 2, int.MaxValue);
-		verticalRayCount = Mathf.Clamp (verticalRayCount, 2, int.MaxValue);
-
-		horizontalRaySpacing = bounds.size.y / (horizontalRayCount - 1);
-		verticalRaySpacing = bounds.size.x / (verticalRayCount - 1);
-
-	}
-
-	struct RayCastOrigins {
-		public Vector2 topLeft, topRight;
-		public Vector2 bottomLeft, bottomRight;
 	}
 
 	public struct CollisionInfo{

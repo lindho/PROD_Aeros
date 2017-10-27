@@ -5,15 +5,20 @@ using UnityEngine;
 [RequireComponent (typeof (PlayerController))]
 public class Enemy : MonoBehaviour {
 
-	float attackDistanceThreshold;
-	float timeBetweenAttacks = 1;
+	private float attackDistanceThreshold;
+	private float timeBetweenAttacks = 1;
 
-	float nextAttackTime;
+	private float nextAttackTime;
 
-	bool isAggro;
-	bool isChasing;
+	private float moveSpeed = 5f;
+	private float health = 10;
+	private float damage = 1;
+
+	private bool isAggro;
+	private bool isChasing;
+
+
 	public Transform target;
-	float moveSpeed = 5f;
 	public GameObject startPosition;
 
 	void Start () {

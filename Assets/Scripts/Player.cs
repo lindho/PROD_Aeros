@@ -5,68 +5,35 @@ using UnityEngine;
 [RequireComponent(typeof (PlayerController))]
 public class Player : MonoBehaviour {
 
-
-	const float maxSpeed = 5f;
-
-	public LayerMask groundLayer;
-	float rotationRayLength = 50f;
-	Camera mainCamera;
-
-	public float moveSpeedGround = 5f;
-	public float moveSpeedWater = 3f;
-	Vector2 velocity;
-
-	float accelerationTimeGround = .05f;
-//	float accelerationTimeWater = .2f;
-//	float accelerationTimeMud  = .3f;
-
-	float velocityXSmoothing;
-	float velocityYSmoothing;
-
 	PlayerController controller;
 
-	bool isDemon;
-	string demonBind = "r";
+	public LayerMask groundLayer;
 
-//	Collider collider;
-//  Vector2 moveInput;
+	Vector2 velocity;
+
+	public float damage = 3;
+	public float moveSpeedGround = 5f;
+	public float moveSpeedWater = 3f;
+
+	private float accelerationTimeGround = .05f;
+	private float accelerationTimeWater = .2f;
+
+	private float velocityXSmoothing;
+	private float velocityYSmoothing;
+
+	private bool demonIsMoving;
+	private bool isDemon;
+	private string demonBind = "r";
 
 
 	void Start () {
 		controller = GetComponent <PlayerController>();
-		mainCamera = Camera.main;
 		isDemon = false;
 	}
 
 	public void Update(){
 
-//		Rotate();
-
-// 		if (controller.collisions.below || controller.collisions.above) {
-//			velocity.y = 0;
-//		}
-//
-//		if (controller.collisions.left || controller.collisions.right) {
-//			velocity.x = 0;
-//		}
-
-		float pythagoras = (Mathf.Pow(velocity.x, 2) + (Mathf.Pow(velocity.y, 2)));
-
-		if (pythagoras > (Mathf.Pow (maxSpeed, 2))) {
-			float magnitude = Mathf.Sqrt (pythagoras);
-			float multiplier = maxSpeed / magnitude;
-			velocity.x *= multiplier;
-			velocity.y *= multiplier;
-		}
-
-		Vector2 input = new Vector2 (Input.GetAxisRaw ("Horizontal"), Input.GetAxisRaw ("Vertical")).normalized;
-
-		float targetVelocityX = input.x * moveSpeedGround;
-		velocity.x = Mathf.SmoothDamp (velocity.x, targetVelocityX, ref velocityXSmoothing, accelerationTimeGround); //här kan man updatera accelerationstiden baserat på underlag, water och mud variabler finns
-		float targetVelocityY = input.y * moveSpeedGround;
-		velocity.y = Mathf.SmoothDamp (velocity.y, targetVelocityY, ref velocityYSmoothing, accelerationTimeGround);
-
-		controller.Move (velocity * Time.deltaTime, input);
+		Movement ();
 
 		if(Input.GetKeyDown(demonBind)){
 			isDemon = !isDemon;
@@ -74,22 +41,24 @@ public class Player : MonoBehaviour {
 		}
 	}
 
+	public void Movement(){
+	
+		Vector2 input = new Vector2 (Input.GetAxisRaw ("Horizontal"), Input.GetAxisRaw ("Vertical")).normalized;
+
+		float targetVelocityX = input.x * moveSpeedGround;
+		velocity.x = Mathf.SmoothDamp (velocity.x, targetVelocityX, ref velocityXSmoothing, /*(groundLayer == true) ? */accelerationTimeGround /*: accelerationTimeWater*/); //här kan man updatera accelerationstiden baserat på underlag, water och mud variabler finns
+
+		float targetVelocityY = input.y * moveSpeedGround;
+		velocity.y = Mathf.SmoothDamp (velocity.y, targetVelocityY, ref velocityYSmoothing, /*(groundLayer == true) ? */accelerationTimeGround /*: accelerationTimeWater*/);
+
+		controller.Move (velocity * Time.deltaTime, input);
+	}
+
 	public void DemonForm(){
 		if (isDemon) {
-			moveSpeedGround += 7f;
+			moveSpeedGround += 2f;
 		} else {
 			moveSpeedGround = 5f;
 		}
 	}
-
-//	void RotatePlayer(){
-//		Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition); 
-//		RaycastHit hit;
-//
-//		if (Physics.Raycast (ray, out hit)) { 
-//			Vector3 hitPoint = hit.point;
-//			Debug.DrawLine (ray.origin, hitPoint, Color.red);
-//			controller.LookAt (hitPoint);
-//		}
-//	}
 }

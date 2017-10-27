@@ -6,17 +6,7 @@ public class CameraFollow : MonoBehaviour {
 
     public PlayerController target;
 	private FocusArea focusArea;
-
-	public float lookAheadDst;
-	public float lookSmoothTime;
-	public float smoothTime;
 	public Vector2 focusAreaSize;
-
-	private float currentLookAhead;
-	private float targetLookAhead;
-	private float lookAheadDir;
-	private float smoothLookVelocity;
-	private bool lookAheadStopped;
 
 	void Start() {
 		focusArea = new FocusArea (target.collider.bounds, focusAreaSize);
@@ -26,44 +16,8 @@ public class CameraFollow : MonoBehaviour {
 		focusArea.Update (target.collider.bounds);
 
 		Vector2 focusPosition = focusArea.centre;
-
-
-		if (focusArea.velocity.x != 0) {
-			lookAheadDir = Mathf.Sign (focusArea.velocity.x);
-			if (Mathf.Sign(target.playerInput.x) == Mathf.Sign(focusArea.velocity.x) && target.playerInput.x != 0) {
-				lookAheadStopped = false;
-				targetLookAhead = lookAheadDir * lookAheadDst;
-			}
-			else {
-				if (!lookAheadStopped) {
-					lookAheadStopped = true;
-					targetLookAhead = currentLookAhead + (lookAheadDir * lookAheadDst - currentLookAhead)/4f;
-				}
-			}
-		}
-
-		if (focusArea.velocity.y != 0) {
-			lookAheadDir = Mathf.Sign (focusArea.velocity.y);
-			if (Mathf.Sign(target.playerInput.y) == Mathf.Sign(focusArea.velocity.y) && target.playerInput.y != 0) {
-				lookAheadStopped = false;
-				targetLookAhead = lookAheadDir * lookAheadDst;
-			}
-			else {
-				if (!lookAheadStopped) {
-					lookAheadStopped = true;
-					targetLookAhead = currentLookAhead + (lookAheadDir * lookAheadDst - currentLookAhead)/4f;
-				}
-			}
-		}
-			
-		currentLookAhead = Mathf.SmoothDamp (currentLookAhead, targetLookAhead, ref smoothLookVelocity, lookSmoothTime);
-		focusPosition += Vector2.right * currentLookAhead;
 		transform.position = (Vector3)focusPosition + Vector3.forward * -10;
-	}
 
-	void OnDrawGizmos() {
-		Gizmos.color = new Color (1, 0, 0, .5f);
-		Gizmos.DrawCube (focusArea.centre, focusAreaSize);
 	}
 
 	struct FocusArea {

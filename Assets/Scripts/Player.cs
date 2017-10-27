@@ -23,6 +23,7 @@ public class Player : MonoBehaviour {
 
 	private bool demonIsMoving;
 	private bool isDemon;
+	private bool isPlayer;
 	private string demonBind = "r";
 
 
@@ -58,6 +59,7 @@ public class Player : MonoBehaviour {
 		if (isDemon) {
 			moveSpeedGround += 2f;
 		} else {
+			isPlayer = true;
 			moveSpeedGround = 5f;
 		}
 	}

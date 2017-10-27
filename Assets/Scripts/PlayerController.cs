@@ -12,21 +12,18 @@ public class PlayerController : RaycastController {
 	//Animation
 	private Animator anim;
 	private bool playerIsMoving;
-	private Vector2 lastMove;
+	private Vector2 faceDirection;
 
 	public override void Start(){
 		base.Start ();
 		anim = GetComponent<Animator> ();
 	}
 
-	public void Move(Vector2 velocity){
-		Move (velocity, Vector2.zero);
-	}
-
 	public void Move(Vector2 velocity, Vector2 input){
 		UpdateRayCastOrigins ();
 		collisions.Reset ();
 		playerInput = input;
+		playerIsMoving = false;
 
 		if (velocity.x != 0) {
 			HorizontalCollisions (ref velocity);
@@ -36,31 +33,28 @@ public class PlayerController : RaycastController {
 			VerticalCollisions (ref velocity);
 		}
 
-//		playerInput = input;
-//		playerIsMoving = false;
-//
-//		if (velocity.y < -5 || velocity.x > 5) {
-//			HorizontalCollisions (ref velocity);
-//			playerIsMoving = true;
-//			lastMove = new Vector2 (velocity.y , 0f);
-//			anim.SetFloat ("FaceX", lastMove.x);
-//		}
-//
-//		if (velocity.y < -5 || velocity.y > 5) {
-//			VerticalCollisions (ref velocity);
-//			playerIsMoving = true;
-//			lastMove = new Vector2 (0f, velocity.x);
-//			anim.SetFloat ("FaceY", lastMove.y);
-//		}
-//
-//		anim.SetFloat ("MoveY", Input.GetAxisRaw ("Vertical"));
-//		anim.SetFloat ("MoveX", Input.GetAxisRaw ("Horizontal"));
-//		anim.SetBool ("PlayerIsMoving", playerIsMoving);
-//		anim.SetFloat ("FaceX", lastMove.x);
-//		anim.SetFloat ("FaceY", lastMove.y);
+		if (input.x > 0.5f || input.x < -0.5f) {
+			playerIsMoving = true;
+			faceDirection = new Vector2 (input.x , 0f);
+			anim.SetFloat ("FaceX", faceDirection.x);
+		}
+
+		if (input.y > 0.5f || input.y < -0.5f) {
+			playerIsMoving = true;
+			faceDirection = new Vector2 (0f, input.y);
+			anim.SetFloat ("FaceY", faceDirection.y);
+		}
+
+		anim.SetFloat ("MoveY", input.y);
+		anim.SetFloat ("MoveX", input.x);
+		anim.SetBool ("PlayerIsMoving", playerIsMoving);
+		anim.SetFloat ("FaceX", faceDirection.x);
+		anim.SetFloat ("FaceY", faceDirection.y);
 
 		transform.Translate (velocity);
 	}
+
+
 
 	void HorizontalCollisions(ref Vector2 velocity){
 		float directionX = Mathf.Sign (velocity.x);
@@ -70,10 +64,7 @@ public class PlayerController : RaycastController {
 			Vector2 rayOrigin = (directionX == -1) ? raycastOrigins.bottomLeft : raycastOrigins.bottomRight;
 			rayOrigin += Vector2.up * (horizontalRaySpacing * i);
 			RaycastHit2D hit = Physics2D.Raycast(rayOrigin, Vector2.right * directionX, rayLength, collisionMask);
-
-			Debug.DrawRay (rayOrigin, Vector2.right * directionX * rayLength, Color.red);
-
-
+		
 			if (hit) {
 				velocity.x = (hit.distance - skinWidth) * directionX;
 				rayLength = hit.distance;
@@ -93,8 +84,6 @@ public class PlayerController : RaycastController {
 			Vector2 rayOrigin = (directionY == -1) ? raycastOrigins.bottomLeft : raycastOrigins.topLeft;
 			rayOrigin += Vector2.right * (verticalRaySpacing * i + velocity.x);
 			RaycastHit2D hit = Physics2D.Raycast(rayOrigin, Vector2.up * directionY, rayLength, collisionMask);
-
-			Debug.DrawRay (rayOrigin, Vector2.up * directionY * rayLength, Color.red);
 
 			if (hit) {
 				velocity.y = (hit.distance - skinWidth) * directionY;

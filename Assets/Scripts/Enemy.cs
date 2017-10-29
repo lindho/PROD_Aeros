@@ -15,14 +15,18 @@ public class Enemy : MonoBehaviour {
 	private float damage = 1;
 
 	private bool isAggro;
-	private bool isChasing;
+	private bool isMoving;
+	private bool isIdle;  
 
+	private Animator anim;
 
 	public Transform target;
 	public GameObject startPosition;
 
 	void Start () {
+		anim = GetComponent<Animator> ();
 		isAggro = false;
+		isMoving = false;
 	}
 
 	void Update () {
@@ -68,10 +72,31 @@ public class Enemy : MonoBehaviour {
 	void Chase(){
 		float attack = moveSpeed * Time.deltaTime;
 		float retreat = (moveSpeed * 1.5f) * Time.deltaTime;
+//		Vector2 realTarget = new Vector2 (target.position.x - 2 , target.position.y - 2);
+
 		if (isAggro) { 
-			transform.position = Vector3.MoveTowards (transform.position, target.position/* - offset*/, attack);		
-		} else if(!isAggro){
+			transform.position = Vector3.MoveTowards (transform.position, target.position, attack);
+			isMoving = true;
+			isIdle = false;
+
+		} else if (!isAggro) {
 			transform.position = Vector3.MoveTowards (transform.position, startPosition.transform.position, retreat);
+			isIdle = false;
+		} 
+
+		if (transform.position == startPosition.transform.position) {
+			isIdle = true;
 		}
+
+		if (isIdle) {
+			isMoving = false;
+		}
+
+		anim.SetBool ("isMoving", isMoving);
+	}
+
+	IEnumerator delay(){
+		float rate = 1;
+		yield return new WaitForSeconds (rate);
 	}
 }

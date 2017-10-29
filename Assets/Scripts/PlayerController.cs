@@ -5,24 +5,27 @@ using UnityEngine;
 public class PlayerController : RaycastController {
 
 	public CollisionInfo collisions;
+	Player player;
 
 	[HideInInspector]
-	public Vector2 playerInput;
+	public Vector2 keyInput;
 
-	//Animation
+	//Animation player
 	private Animator anim;
 	private bool playerIsMoving;
+	private bool demonIsMoving;
 	private Vector2 faceDirection;
+
 
 	public override void Start(){
 		base.Start ();
 		anim = GetComponent<Animator> ();
 	}
 
-	public void Move(Vector2 velocity, Vector2 input){
+	public void PlayerMove(Vector2 velocity, Vector2 input){
 		UpdateRayCastOrigins ();
 		collisions.Reset ();
-		playerInput = input;
+		keyInput = input;
 		playerIsMoving = false;
 
 		if (velocity.x != 0) {
@@ -35,25 +38,55 @@ public class PlayerController : RaycastController {
 
 		if (input.x > 0.5f || input.x < -0.5f) {
 			playerIsMoving = true;
-			faceDirection = new Vector2 (input.x , 0f);
-			anim.SetFloat ("FaceX", faceDirection.x);
+			faceDirection = new Vector2 (input.x, 0f);
 		}
 
 		if (input.y > 0.5f || input.y < -0.5f) {
 			playerIsMoving = true;
 			faceDirection = new Vector2 (0f, input.y);
-			anim.SetFloat ("FaceY", faceDirection.y);
 		}
 
 		anim.SetFloat ("MoveY", input.y);
 		anim.SetFloat ("MoveX", input.x);
-		anim.SetBool ("PlayerIsMoving", playerIsMoving);
 		anim.SetFloat ("FaceX", faceDirection.x);
 		anim.SetFloat ("FaceY", faceDirection.y);
-
+		anim.SetBool ("PlayerIsMoving", playerIsMoving);
 		transform.Translate (velocity);
 	}
 
+	public void DemonMove(Vector2 velocity, Vector2 input){
+		UpdateRayCastOrigins ();
+		collisions.Reset ();
+		keyInput = input;
+		demonIsMoving = false;
+
+		if (velocity.x != 0) {
+			HorizontalCollisions (ref velocity);
+		}
+
+		if (velocity.y != 0) {
+			VerticalCollisions (ref velocity);
+		}
+
+		if (input.x > 0.5f || input.x < -0.5f) {
+			demonIsMoving = true;
+			faceDirection = new Vector2 (input.x, 0f);
+		}
+
+		if (input.y > 0.5f || input.y < -0.5f) {
+			demonIsMoving = true;
+			faceDirection = new Vector2 (0f, input.y);
+		}
+
+		anim.SetFloat ("MoveY", input.y);
+		anim.SetFloat ("MoveX", input.x);
+		anim.SetFloat ("FaceX", faceDirection.x);
+		anim.SetFloat ("FaceY", faceDirection.y);
+		anim.SetBool ("DemonIsMoving", demonIsMoving);
+		anim.SetBool ("IsDemon", player.isDemon);
+
+		transform.Translate (velocity);
+	}
 
 
 	void HorizontalCollisions(ref Vector2 velocity){

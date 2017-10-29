@@ -22,8 +22,8 @@ public class Player : MonoBehaviour {
 	private float velocityYSmoothing;
 
 	private bool demonIsMoving;
-	private bool isDemon;
-	private bool isPlayer;
+	[HideInInspector]
+	public bool isDemon;
 	private string demonBind = "r";
 
 
@@ -52,14 +52,18 @@ public class Player : MonoBehaviour {
 		float targetVelocityY = input.y * moveSpeedGround;
 		velocity.y = Mathf.SmoothDamp (velocity.y, targetVelocityY, ref velocityYSmoothing, /*(groundLayer == true) ? */accelerationTimeGround /*: accelerationTimeWater*/);
 
-		controller.Move (velocity * Time.deltaTime, input);
+		controller.PlayerMove (velocity * Time.deltaTime, input);
+
+	}
+
+	void Attack(){
+		
 	}
 
 	public void DemonForm(){
 		if (isDemon) {
 			moveSpeedGround += 2f;
 		} else {
-			isPlayer = true;
 			moveSpeedGround = 5f;
 		}
 	}

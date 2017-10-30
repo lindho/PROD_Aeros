@@ -5,7 +5,6 @@ using UnityEngine;
 public class PlayerController : RaycastController {
 
 	public CollisionInfo collisions;
-	Player player;
 
 	[HideInInspector]
 	public Vector2 keyInput;
@@ -16,10 +15,13 @@ public class PlayerController : RaycastController {
 	private bool demonIsMoving;
 	private Vector2 faceDirection;
 
+	[HideInInspector]
+	public bool canMove;
 
 	public override void Start(){
 		base.Start ();
 		anim = GetComponent<Animator> ();
+		canMove = true;
 	}
 
 	public void PlayerMove(Vector2 velocity, Vector2 input){
@@ -27,6 +29,12 @@ public class PlayerController : RaycastController {
 		collisions.Reset ();
 		keyInput = input;
 		playerIsMoving = false;
+
+		if (!canMove) {
+			input = Vector2.zero;
+			return;
+		}
+
 
 		if (velocity.x != 0) {
 			HorizontalCollisions (ref velocity);
@@ -83,7 +91,6 @@ public class PlayerController : RaycastController {
 		anim.SetFloat ("FaceX", faceDirection.x);
 		anim.SetFloat ("FaceY", faceDirection.y);
 		anim.SetBool ("DemonIsMoving", demonIsMoving);
-		anim.SetBool ("IsDemon", player.isDemon);
 
 		transform.Translate (velocity);
 	}

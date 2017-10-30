@@ -9,14 +9,16 @@ public class Player : MonoBehaviour {
 
 	public LayerMask groundLayer;
 
-	Vector2 velocity;
+	private Vector2 velocity;
 
 	public float damage = 3;
+
+
 	public float moveSpeedGround = 5f;
-	public float moveSpeedWater = 3f;
+//	public float moveSpeedWater = 3f;
 
 	private float accelerationTimeGround = .05f;
-	private float accelerationTimeWater = .2f;
+//	private float accelerationTimeWater = .2f;
 
 	private float velocityXSmoothing;
 	private float velocityYSmoothing;
@@ -29,7 +31,7 @@ public class Player : MonoBehaviour {
 
 	void Start () {
 		controller = GetComponent <PlayerController>();
-		isDemon = false;
+		isDemon = false; 
 	}
 
 	public void Update(){
@@ -67,4 +69,14 @@ public class Player : MonoBehaviour {
 			moveSpeedGround = 5f;
 		}
 	}
+
+//	public void takeDamage(float damage){
+//		currentHealth -= damage;
+//
+//		if (currentHealth <= 0) {
+//			this.transform.position = spawnPoint.position;
+//			this.transform.rotation = spawnPoint.rotation;
+//			currentHealth = maxHealth;
+//		}
+//	}
 }

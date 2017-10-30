@@ -6,7 +6,7 @@ using UnityEngine;
 public class RaycastController : MonoBehaviour {
 
 	[HideInInspector]
-	public BoxCollider2D collider;
+	public new BoxCollider2D collider;
 	protected RayCastOrigins raycastOrigins;
 
 	public LayerMask collisionMask;

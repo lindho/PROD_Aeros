@@ -8,19 +8,19 @@ public class DialogueHolder : MonoBehaviour {
 	public string dialogue;
 	private DialogueManager dMan;
 
+	public string[] dialogueLines;
+
 	void Start () {
 		dMan = FindObjectOfType <DialogueManager>();
-	}
-	
-
-	void Update () {
-		
 	}
 
 	void OnTriggerStay2D(Collider2D other){
 		if (other.gameObject.name == "Player") {
-			if (Input.GetKeyUp (KeyCode.Space)) {
-				dMan.ShowBox (dialogue);
+			
+			if (Input.GetKeyUp (KeyCode.E) && !dMan.dialogueActive) {
+				dMan.dialogueLines = dialogueLines;
+				dMan.currentLine = 0;
+				dMan.ShowDialogue ();
 			}
 		}
 	}
